@@ -1,77 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Family Chart</title>
-  <link rel="stylesheet" href="styles/family-chart.css" />
-  <link rel="shortcut icon" type="image/svg" href="logo.svg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>my-family-chart</title>
+  <!-- Reference D3.js locally -->
   <script src="js/d3.js"></script>
-  <script src="js/family-chart.js"></script>
-  <style>
-    body {
-      margin: 0;
-      background: #1e1e1e;
-      font-family: sans-serif;
-      color: #fff;
-    }
-    #FamilyChart {
-      width: 100%;
-      height: 100vh;
-    }
-  </style>
+  <!-- Reference Family Chart locally -->
+  <script type="module" src="js/family-chart.js"></script>
+  <link rel="shortcut icon" type="image/svg" href="logo.svg">
+  <link rel="stylesheet" href="styles/family-chart.css">
 </head>
 <body>
+<div id="FamilyChart" class="f3" style="width:100%;height:900px;margin:auto;background-color:rgb(33,33,33);color:#fff;"></div>
 
-<!-- Tree container -->
-<div id="FamilyChart" class="f3"></div>
+<div id="form-container" class="form-container">
+  <div id="form-header">
+    <button id="edit-button" onclick="editForm()">Edit</button>
+    <button id="add-button" onclick="addForm()">Add</button>
+  </div>
+  <form id="family-form">
+    <label for="given-name">Given Name</label>
+    <input type="text" id="given-name" name="given-name">
 
-<!-- Form container -->
-<div id="card_edit_form" class="f3-form-cont"></div>
+    <label for="family-name">Family Name</label>
+    <input type="text" id="family-name" name="family-name">
 
-<script>
-  fetch('data-staljin.json')
-    .then(res => res.json())
-    .then(data => {
-      console.log("✅ Loaded data:", data);
+    <label for="desc">Description</label>
+    <input type="text" id="desc" name="desc">
 
-      if (!Array.isArray(data)) {
-        console.error("❌ ERROR: data must be an array.");
-        throw new Error("Data format invalid");
-      }
+    <label for="place-of-birth">Place of Birth</label>
+    <input type="text" id="place-of-birth" name="place-of-birth">
 
-      const store = f3.createStore({ data });
-      const svg = f3.createSvg(document.getElementById("FamilyChart"));
+    <label for="place-of-death">Place of Death</label>
+    <input type="text" id="place-of-death" name="place-of-death">
 
-      const Card = f3.elements.Card({
-        store,
-        svg,
-        card_dim: { w: 220, h: 70, text_x: 75, text_y: 15, img_w: 60, img_h: 60, img_x: 5, img_y: 5 },
-        card_display: [d => d.data.label || '', d => d.data.desc || ''],
-        mini_tree: true,
-        link_break: false
-      });
+    <label for="gender">Gender</label>
+    <input type="text" id="gender" name="gender">
 
-      const view = (props) => f3.view(store, svg, Card, props);
-      store.setOnUpdate(view);
-      view();
+    <button type="submit">Submit</button>
+  </form>
+</div>
 
-      const editForm = f3.editTree(store, {
-        card_edit_form: document.getElementById("card_edit_form"),
-      });
 
-      Card.setOnCardClick((d) => {
-        f3.handlers.cardEdit(store, { d, cardEditForm: editForm });
-      });
 
-      Card.setOnCardDoubleClick((d) => {
-        f3.handlers.cardChangeMain(store, { d });
-      });
-    })
-    .catch(err => {
-      console.error("❌ Failed to load data or render chart:", err);
-    });
+<script type="module">
+
+// Use the local data-staljin.json
+fetch('data-staljin.json')
+  .then(res => res.json())
+  .then(data => create(data))
+  .catch(err => console.error(err))
+
+function create(data) {
+  const cont = document.querySelector("#FamilyChart")
+  const store = f3.createStore({
+    data,
+    node_separation: 250,
+    level_separation: 150
+  })
+  const svg = f3.createSvg(cont)
+  const Card = f3.elements.Card({
+    store,
+    svg,
+    card_dim: {w:220,h:70,text_x:75,text_y:15,img_w:60,img_h:60,img_x:5,img_y:5},
+    card_display: [d => d.data.label || '', d => d.data.desc || ''],
+    mini_tree: true,
+    link_break: false
+  })
+
+  store.setOnUpdate(props => f3.view(store.getTree(), svg, Card, props || {}))
+  store.updateTree({initial: true})
+
+  setTimeout(() => {
+    const tree = store.getTree();
+    const datum = tree.data[Math.floor(tree.data.length*Math.random())]  // random card
+    console.log(datum.data.data)
+    f3.handlers.cardToMiddle({datum, svg, svg_dim: svg.getBoundingClientRect(),  transition_time: 2000})
+  }, 4000)
+}
+
+const Card = f3.elements.Card({
+  store,
+  svg,
+  card_dim: {w:220, h:70, text_x:75, text_y:15, img_w:60, img_h:60, img_x:5, img_y:5},
+  card_display: [d => d.data.label || '', d => d.data.desc || ''],
+  mini_tree: true,
+  link_break: false,
+  onClick: (datum) => {
+    // Open the form with the selected data
+    openForm(datum.data);
+  }
+});
+
+
 </script>
+<script src="js/index.js"></script> 
 
 </body>
 </html>
