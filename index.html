@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Family Chart</title>
+  <link rel="stylesheet" href="styles/family-chart.css" />
+  <link rel="shortcut icon" type="image/svg" href="logo.svg">
+  <script src="js/d3.js"></script>
+  <script src="js/family-chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background: #1e1e1e;
+      font-family: sans-serif;
+      color: #fff;
+    }
+    #FamilyChart {
+      width: 100%;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Tree container -->
+<div id="FamilyChart" class="f3"></div>
+
+<!-- Form container -->
+<div id="card_edit_form" class="f3-form-cont"></div>
+
+<script>
+  fetch('data-staljin.json')
+    .then(res => res.json())
+    .then(data => {
+      console.log("✅ Loaded data:", data);
+
+      if (!Array.isArray(data)) {
+        console.error("❌ ERROR: data must be an array.");
+        throw new Error("Data format invalid");
+      }
+
+      const store = f3.createStore({ data });
+      const svg = f3.createSvg(document.getElementById("FamilyChart"));
+
+      const Card = f3.elements.Card({
+        store,
+        svg,
+        card_dim: { w: 220, h: 70, text_x: 75, text_y: 15, img_w: 60, img_h: 60, img_x: 5, img_y: 5 },
+        card_display: [d => d.data.label || '', d => d.data.desc || ''],
+        mini_tree: true,
+        link_break: false
+      });
+
+      const view = (props) => f3.view(store, svg, Card, props);
+      store.setOnUpdate(view);
+      view();
+
+      const editForm = f3.editTree(store, {
+        card_edit_form: document.getElementById("card_edit_form"),
+      });
+
+      Card.setOnCardClick((d) => {
+        f3.handlers.cardEdit(store, { d, cardEditForm: editForm });
+      });
+
+      Card.setOnCardDoubleClick((d) => {
+        f3.handlers.cardChangeMain(store, { d });
+      });
+    })
+    .catch(err => {
+      console.error("❌ Failed to load data or render chart:", err);
+    });
+</script>
+
+</body>
+</html>
