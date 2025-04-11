@@ -13,10 +13,11 @@
 </head>
 <body>
 <div id="FamilyChart" class="f3" style="width:100%;height:900px;margin:auto;background-color:rgb(33,33,33);color:#fff;"></div>
+<button id="add-person-btn">Add Person</button>
 
 
 <script type="module">
-
+import { enableFormButtons } from './js/form-utils.js';
 // Use the local data-staljin.json
 fetch('data-staljin.json')
   .then(res => res.json())
