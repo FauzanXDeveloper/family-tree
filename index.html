@@ -5,15 +5,59 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>my-family-chart</title>
   <!-- Reference D3.js locally -->
-  <script src="js/d3.js"></script>
+  <script type="module" src="js/d3.js"></script>
+  <script type="module" src="src/createChart.js"></script>
+  <script type="module" src="src/createStore.js"></script>
+  <script type="module" src="src/d3.js"></script>
+  <script type="module" src="src/elements.js"></script>
+  <script type="module" src="src/handlers.js"></script>
+  <script type="module" src="src/index.js"></script>
+
+  <script type="module" src="src/CalculateTree/CalculateTree.handlers.js"></script>
+  <script type="module" src="src/CalculateTree/CalculateTree.js"></script>
+  <script type="module" src="src/CalculateTree/createLinks.js"></script>
+
+  <script type="module" src="src/Cards/CardHtml.js"></script>
+  <script type="module" src="src/Cards/CardSvg.js"></script>
+  <script type="module" src="src/Cards/utils.js"></script>
+
+  <script type="module" src="src/CreateTree/addRelative.js"></script>
+  <script type="module" src="src/CreateTree/checkIfRelativesConnectedWithoutPerson.js"></script>
+  <script type="module" src="src/CreateTree/editTree.js"></script>
+  <script type="module" src="src/CreateTree/form.js"></script>
+  <script type="module" src="src/CreateTree/formInfoSetup.js"></script>
+  <script type="module" src="src/CreateTree/history.js"></script>
+  <script type="module" src="src/CreateTree/newPerson.js"></script>
+
+  <script type="module" src="src/handlers/cardMethods.js"></script>
+  <script type="module" src="src/handlers/general.js"></script>
+
+  <script type="module" src="src/view/view.cards.js"></script>
+  <script type="module" src="src/view/view.handlers.js"></script>
+  <script type="module" src="src/view/view.html.cards.js"></script>
+  <script type="module" src="src/view/view.html.component.js"></script>
+  <script type="module" src="src/view/view.html.handlers.js"></script>
+  <script type="module" src="src/view/view.js"></script>
+  <script type="module" src="src/view/view.links.js"></script>
+  <script type="module" src="src/view/view.svg.js"></script>
+
+  <script type="module" src="src/view/elements/Card.defs.js"></script>
+  <script type="module" src="src/view/elements/Card.elements.js"></script>
+  <script type="module" src="src/view/elements/Card.icons.js"></script>
+  <script type="module" src="src/view/elements/Card.js"></script>
+  <script type="module" src="src/view/elements/Card.templates.js"></script>
+  <script type="module" src="src/view/elements/CardHtml.js"></script>
+  <script type="module" src="src/view/elements/Form.js"></script>
+  <script type="module" src="src/view/elements/Link.js"></script> 
   <!-- Reference Family Chart locally -->
   <script type="module" src="js/family-chart.js"></script>
   <link rel="shortcut icon" type="image/svg" href="logo.svg">
+  <link rel="stylesheet" href="src/styles/family-chart.css">
   <link rel="stylesheet" href="styles/family-chart.css">
 </head>
 <body>
 <div id="FamilyChart" class="f3" style="width:100%;height:900px;margin:auto;background-color:rgb(33,33,33);color:#fff;"></div>
-<button id="add-person-btn">Add Person</button>
+
 
 
 <script type="module">
@@ -65,9 +109,8 @@ const Card = f3.elements.Card({
   }
 });
 
-
 </script>
-<script src="js/index.js"></script> 
+
 
 </body>
 </html>
